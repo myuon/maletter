@@ -28,12 +28,17 @@ class Plugin(object):
         UserStreamからstatusが流れてきたときに呼ばれる．
         """
         pass
+    
+    def replace(self, name):
+        """
+        特定のプラグインを自分自身で置き換える.
+        デフォルトプラグインの挙動を変えたいときなどに
+        """
+        if not self.mw.plugin.has_key(name):
+            print "the plugin which has specified name does not exist."
+            return None
 
-    def change_tab_name(self, widget, newname):
-        """
-        タブに追加されているwidgetの名前をnewnameに変更する．
-        """
-        self.mw.change_tab_name(widget, newname)
+        self.mw.plugin[name] = self
 
     def update_status(self, text, in_reply_to_status_id=None, image=None):
         """
@@ -67,4 +72,3 @@ class Plugin(object):
         画像を追加．ツイート時に自動で画像を追加する
         """
         self.mw.set_image_data(image)
-

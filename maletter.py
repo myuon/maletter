@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
+import io, sys
 from PyQt4 import QtGui, QtCore
 from twython import Twython, TwythonStreamer, TwythonError
 from twython.streaming.types import TwythonStreamerTypesStatuses
 from secretkey import *
 from StringIO import StringIO
-import io
 
 from widget.tab import TweetList, TweetListItem
-from plugin_manager import *
+from plugin_manager import PluginManager
 
 class MainWindow(QtGui.QMainWindow):
     def __init__(self, api_cls, parent = None):
@@ -41,16 +41,16 @@ class MainWindow(QtGui.QMainWindow):
         return QtGui.QMainWindow.closeEvent(self, event)
 
     def initUI(self):
-        for plugin in self.plugin.values():
+        for cls_name in self.plugin_mng.get_plugin_names():
             # プラグインのUIを初期化
-            plugin.on_load()
+            self.plugin[cls_name].on_load()
         
         self.setWindowTitle('maletter')
         self.show()
 
     def status_received(self, status):
-        for cls in self.plugin.values():
-            cls.on_status(status)
+        for cls_name in self.plugin_mng.get_plugin_names():
+            self.plugin[cls_name].on_status(status)
 
         #取得したstatusをstatus_arrayに保存
         if status.has_key('event') == False:
@@ -102,8 +102,7 @@ class StreamerThread(QtCore.QThread):
         self.on_finished = on_finished
 
     def run(self):
-#        self.streamer.user()
-        self.streamer2.sample()
+        self.streamer.user()
     
     def terminate(self):
         if self.on_finished is not None:

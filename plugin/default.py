@@ -7,7 +7,7 @@ sys.path.append(os.pardir)
 
 from PyQt4 import QtGui, QtCore
 
-from plugin import *
+from plugin_class import *
 from StringIO import StringIO
 from widget.box import DetailTextBox, ReplyTextBox, TweetTextBox
 from widget.tab import TweetList

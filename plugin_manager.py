@@ -6,7 +6,6 @@ import sys
 import inspect
 
 class PluginManager(object):
-
     def __init__(self, target_dir, required_funcs):
         """
         target_dir:pluginフォルダの指定．相対パスでもよい．

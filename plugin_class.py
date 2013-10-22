@@ -15,7 +15,6 @@ class Plugin(object):
         """
         self.mw = mainwindow
         self.mystatus = self.mw.mystatus
-        self.priority = 0
 
     def on_load(self):
         """
@@ -39,6 +38,7 @@ class Plugin(object):
             return None
 
         self.mw.plugin[name] = self
+        self.mw.plugin_mng.delete_plugin(self.mw, self.__class__.__name__)
 
     def update_status(self, text, in_reply_to_status_id=None, image=None):
         """

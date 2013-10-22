@@ -53,8 +53,8 @@ class PluginManager(object):
         # default_filesは先に読み込む
         for module in set([inspect.getmodulename(item)
             for item in self.sort_plugin_list(os.listdir(self.plugin_dir_path))]):
-            self.import_plugin(module)
-            
+                self.import_plugin(module)
+    
     def import_plugin(self, mod_name):
         """
         mod_name:モジュール名
@@ -109,3 +109,8 @@ class PluginManager(object):
             return {}
         return self.plugin_order
 
+    def delete_plugin(self, mw, name):
+        if self.plugin_dict.has_key(name):
+            del self.plugin_dict[name]
+            del self.plugin_order[self.plugin_order.index(name)]
+            del mw.plugin[name]

@@ -40,22 +40,11 @@ class DefaultLayout(Plugin):
         self.detail_widget = QtGui.QWidget()
         self.detail_widget.setFixedHeight(80)
         
-        self.detailtext = DetailTextBox()
-        self.detailtext.setFixedHeight(80)
-
-        self.preview = QtGui.QPixmap()    
-        self.picture_prv = QtGui.QLabel()
-        self.picture_prv.setFixedSize(100, 80)
-        self.picture_prv.setHidden(True)
-        self.picture_prv.setPixmap(self.preview)
-
-        layout = QtGui.QHBoxLayout()
-        layout.addWidget(self.detailtext)
-        layout.addWidget(self.picture_prv)
-        layout.setMargin(0)
+        self.detail_layout = QtGui.QHBoxLayout()
+        self.detail_layout.setMargin(0)
 
         # 詳細ツイートボックスと画像プレビューを標準レイアウトに追加
-        self.detail_widget.setLayout(layout)
+        self.detail_widget.setLayout(self.detail_layout)
         
         # ツイートテキスト表示部分
         self.twtext_widget = QtGui.QWidget()
@@ -243,7 +232,7 @@ class LayoutPlugin(Plugin):
             retweeted_text = self.add_link_status(status['retweeted_status'])
             retweeted_source = status['retweeted_status']['source']
             text = retweeted_username+':'+retweeted_userid+'<br>'+retweeted_text+'<br><br>(Retweeted by @'+userid+', via ' +retweeted_source+')'
-        self.show_html(text)
+        self.show_html("<br>".join(text.split('\n')))
 
     def add_link_status(self, status):
         """
@@ -322,3 +311,26 @@ class TweetArea(LayoutPlugin):
     def initUI(self):
         self.twtext = TweetTextBox(self)
         self.dlayout.twtext_layout.addWidget(self.twtext)
+        
+        self.dlayout.twtext = self.twtext
+
+class DetailPreviewArea(LayoutPlugin):
+    def __init__(self, mainwindow):
+        super(DetailPreviewArea, self).__init__(mainwindow)
+
+    def initUI(self):        
+        self.detailtext = DetailTextBox()
+        self.detailtext.setFixedHeight(80)
+
+        self.preview = QtGui.QPixmap()    
+        self.picture_prv = QtGui.QLabel()
+        self.picture_prv.setFixedSize(100, 80)
+        self.picture_prv.setHidden(True)
+        self.picture_prv.setPixmap(self.preview)
+
+        self.dlayout.detail_layout.addWidget(self.detailtext)
+        self.dlayout.detail_layout.addWidget(self.picture_prv)
+        
+        self.dlayout.detailtext = self.detailtext
+        self.dlayout.preview = self.preview
+        self.dlayout.picture_prv = self.picture_prv
